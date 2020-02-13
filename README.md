@@ -1,0 +1,2 @@
+# Loputoo
+Tartu KHK Lõputöö
