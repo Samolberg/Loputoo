@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         var api = getRetrofit().create(SightApi::class.java)
 
-        var sightIdValue = null
+        var sightIdValue = 0
         var sightList = null
         var currentSight = null
 
@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
             }
 */
             var sightList = sights.size.toString()
-            var currentSight : SightEntity = sights.get(sightIdValue).id
+            var currentSight : SightEntity = sights.get(sightIdValue)
 
             CoroutineScope(Dispatchers.Main).launch {
 
