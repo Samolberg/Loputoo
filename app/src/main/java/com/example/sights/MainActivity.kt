@@ -22,7 +22,7 @@ class MainActivity : AppCompatActivity() {
 
         var api = getRetrofit().create(SightApi::class.java)
 
-        var sightIdValue = 0
+        var sightIdValue : Int = 0
         var sightList = null
         var currentSight = null
 
@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            val sights = api.getSight().await()
+            var sights = api.getSight().await()
       /*      try {
                 val sights = api.getSight().await()
                 Log.d("sights", sights.size.toString())
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
 
             }
 */
-            var sightList = sights.size.toString()
+            var sightList = api
             var currentSight : SightEntity = sights.get(sightIdValue)
 
             CoroutineScope(Dispatchers.Main).launch {
