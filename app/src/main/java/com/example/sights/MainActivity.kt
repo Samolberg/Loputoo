@@ -22,29 +22,28 @@ class MainActivity : AppCompatActivity() {
 
         var api = getRetrofit().create(SightApi::class.java)
 
-        var sightIdValue : Int = 0
-        var sightList = null
+        var sightIdValue: Int = 0
+        var sights: List<SightEntity> = emptyList()
         var currentSight = null
 
 
 
 
         CoroutineScope(Dispatchers.IO).launch {
-            var sights = api.getSight().await()
-      /*      try {
-                val sights = api.getSight().await()
-                Log.d("sights", sights.size.toString())
-                Log.d("sights", sights.get(0).url)
-            } catch (e: Exception) {
-                Log.e("testerror", "asdasd", e)
+            sights = api.getSight().await()
+            /*      try {
+                      val sights = api.getSight().await()
+                      Log.d("sights", sights.size.toString())
+                      Log.d("sights", sights.get(0).url)
+                  } catch (e: Exception) {
+                      Log.e("testerror", "asdasd", e)
 
-            }
-*/
-            var sightList = api
-            var currentSight : SightEntity = sights.get(sightIdValue)
+                  }
+      */
+
+            var currentSight: SightEntity = sights.get(sightIdValue)
 
             CoroutineScope(Dispatchers.Main).launch {
-
 
 
                 Picasso.get().load(currentSight.url).into(landingImage)
