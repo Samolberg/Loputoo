@@ -23,7 +23,7 @@ class SightEntity {
     var description: String? = null
 
     @Expose
-    @SerializedName("url")
+    @SerializedName("URL")
     var url: String? = null
 
     @Expose
