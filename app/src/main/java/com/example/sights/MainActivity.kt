@@ -20,7 +20,6 @@ class MainActivity : AppCompatActivity() {
 
     var sightIdValue: Int = 0
     var sights: List<SightEntity> = emptyList()
-    var currentSight = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,8 +41,6 @@ class MainActivity : AppCompatActivity() {
 
                   }
       */
-
-            var currentSight: SightEntity = sights.get(sightIdValue)
 
             CoroutineScope(Dispatchers.Main).launch {
 
