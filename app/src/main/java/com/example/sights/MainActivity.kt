@@ -16,15 +16,17 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
+    var api = getRetrofit().create(SightApi::class.java)
+
+    var sightIdValue: Int = 0
+    var sights: List<SightEntity> = emptyList()
+    var currentSight = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        var api = getRetrofit().create(SightApi::class.java)
 
-        var sightIdValue: Int = 0
-        var sights: List<SightEntity> = emptyList()
-        var currentSight = null
 
 
 
@@ -45,13 +47,23 @@ class MainActivity : AppCompatActivity() {
 
             CoroutineScope(Dispatchers.Main).launch {
 
+                loadSight(sightIdValue)
 
-                Picasso.get().load(currentSight.url).into(landingImage)
 
             }
 
         }
 
+
+
+
+    }
+
+    fun loadSight(index: Int){
+
+        val currentSight: SightEntity = sights.get(index)
+
+        Picasso.get().load(currentSight.url).into(landingImage)
 
     }
 }
