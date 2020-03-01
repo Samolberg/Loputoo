@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Sights</string>
     <string name="nextSightText">Show next sight</string>
+    <string name="sightMaps">Let's go there</string>
 </resources>

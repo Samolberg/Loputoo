@@ -3,8 +3,6 @@ package com.example.sights
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.Button
 import com.example.sights.api.endpoints.SightApi
 import com.example.sights.api.entities.SightEntity
 import com.example.sights.api.getRetrofit
@@ -14,6 +12,11 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import android.content.Intent
+import androidx.core.app.ComponentActivity.ExtraData
+import androidx.core.content.ContextCompat.getSystemService
+import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.net.Uri
 
 
 class MainActivity : AppCompatActivity() {
@@ -27,29 +30,18 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        /*
-        final nextSightButton button = findViewById(R.id.nextSight);
-        button.setOnClickListener(new View.OnClickListenrer(){
-            public void onClick(View v){
-                sightIdValue++
+        nextSight.setOnClickListener {
+            sightIdValue++
+            if (sightIdValue >= sights.size) {
+                sightIdValue = 0
             }
-        });
+            loadSight(sightIdValue)
 
-        */
+        }
 
-       nextSight.setOnClickListener {
-           sightIdValue++
-           if(sightIdValue >= sights.size){
-               sightIdValue = 0
-           }
-           loadSight(sightIdValue)
-
-       }
-
-
-
-
-
+        sightMaps.setOnClickListener {
+            startMaps()
+        }
 
         CoroutineScope(Dispatchers.IO).launch {
             sights = api.getSight().await()
@@ -66,22 +58,26 @@ class MainActivity : AppCompatActivity() {
             CoroutineScope(Dispatchers.Main).launch {
 
                 loadSight(sightIdValue)
-
-
             }
-
         }
-
-
-
-
     }
 
-    fun loadSight(index: Int){
+    fun loadSight(index: Int) {
 
         val currentSight: SightEntity = sights.get(index)
 
         Picasso.get().load(currentSight.url).into(landingImage)
+        sightDescription.setText(sights.get(sightIdValue).description)
 
+    }
+
+    fun startMaps(){
+
+        val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        if (mapIntent.resolveActivity(packageManager) != null) {
+            startActivity(mapIntent)
+        }
     }
 }
