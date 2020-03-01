@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Sights</string>
+    <string name="nextSightText">Show next sight</string>
 </resources>

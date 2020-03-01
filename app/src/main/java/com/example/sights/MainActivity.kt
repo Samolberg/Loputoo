@@ -3,6 +3,8 @@ package com.example.sights
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
 import com.example.sights.api.endpoints.SightApi
 import com.example.sights.api.entities.SightEntity
 import com.example.sights.api.getRetrofit
@@ -24,6 +26,25 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        /*
+        final nextSightButton button = findViewById(R.id.nextSight);
+        button.setOnClickListener(new View.OnClickListenrer(){
+            public void onClick(View v){
+                sightIdValue++
+            }
+        });
+
+        */
+
+       nextSight.setOnClickListener {
+           sightIdValue++
+           if(sightIdValue >= sights.size){
+               sightIdValue = 0
+           }
+           loadSight(sightIdValue)
+
+       }
 
 
 
