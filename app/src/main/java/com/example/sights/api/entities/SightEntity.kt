@@ -7,15 +7,15 @@ import com.google.gson.annotations.SerializedName
 class SightEntity {
 
     @Expose
-    @SerializedName("id")
+    @SerializedName("ID")
     var id: Int? = null
 
     @Expose
-    @SerializedName("catId")
+    @SerializedName("CategoryID")
     var catId: Int? = null
 
     @Expose
-    @SerializedName("name")
+    @SerializedName("Name")
     var name: String? = null
 
     @Expose
@@ -27,11 +27,11 @@ class SightEntity {
     var url: String? = null
 
     @Expose
-    @SerializedName("latitude")
+    @SerializedName("Latitude")
     var latitude: Double? = null
 
     @Expose
-    @SerializedName("longitude")
+    @SerializedName("Longitude")
     var longitude: Double? = null
 
 

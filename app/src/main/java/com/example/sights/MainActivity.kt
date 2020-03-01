@@ -39,12 +39,11 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        sightMaps.setOnClickListener {
-            startMaps()
-        }
+
 
         CoroutineScope(Dispatchers.IO).launch {
             sights = api.getSight().await()
+
             /*      try {
                       val sights = api.getSight().await()
                       Log.d("sights", sights.size.toString())
@@ -69,11 +68,19 @@ class MainActivity : AppCompatActivity() {
         Picasso.get().load(currentSight.url).into(landingImage)
         sightDescription.setText(sights.get(sightIdValue).description)
 
+        sightMaps.setOnClickListener {
+
+            startMaps(currentSight.latitude,currentSight.longitude)
+        }
+
     }
 
-    fun startMaps(){
+    fun startMaps(latitude: Double?, longitude: Double?){
 
-        val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
+       // val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
+
+        val gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude)
+        Log.d("coordinatesTest", gmmIntentUri.toString())
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         mapIntent.setPackage("com.google.android.apps.maps")
         if (mapIntent.resolveActivity(packageManager) != null) {
