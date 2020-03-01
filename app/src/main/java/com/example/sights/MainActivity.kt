@@ -1,5 +1,6 @@
 package com.example.sights
 
+import android.Manifest
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,15 +14,25 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.core.app.ComponentActivity.ExtraData
 import androidx.core.content.ContextCompat.getSystemService
 import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.location.Location
 import android.net.Uri
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+
 
 
 class MainActivity : AppCompatActivity() {
 
+
+
     var api = getRetrofit().create(SightApi::class.java)
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     var sightIdValue: Int = 0
     var sights: List<SightEntity> = emptyList()
@@ -29,6 +40,47 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            // Permission is not granted
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
+                    1)
+
+                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        } else {
+            // Permission has already been granted
+        }
+
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location : Location? ->
+                // Got last known location. In some rare situations this can be null.
+
+                Log.d("locationtest", location?.latitude.toString())
+                Log.d("locationtest", location?.longitude.toString())
+
+            }
+
+
+
+
+
 
         nextSight.setOnClickListener {
             sightIdValue++
@@ -79,7 +131,8 @@ class MainActivity : AppCompatActivity() {
 
        // val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
 
-        val gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude)
+      //  val gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude)
+        val gmmIntentUri = Uri.parse("google.navigation:q="+latitude+","+longitude+"&mode=w")
         Log.d("coordinatesTest", gmmIntentUri.toString())
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         mapIntent.setPackage("com.google.android.apps.maps")
@@ -87,4 +140,6 @@ class MainActivity : AppCompatActivity() {
             startActivity(mapIntent)
         }
     }
+
+
 }

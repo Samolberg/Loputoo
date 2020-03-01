@@ -2,6 +2,7 @@ package com.example.sights.api.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import retrofit2.http.Query
 
 
 class SightEntity {
@@ -33,6 +34,9 @@ class SightEntity {
     @Expose
     @SerializedName("Longitude")
     var longitude: Double? = null
+
+
+
 
 
 

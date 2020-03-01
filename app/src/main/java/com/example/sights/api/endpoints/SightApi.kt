@@ -10,7 +10,9 @@ interface SightApi {
 
 
     @GET("#")
-    fun getSight():Deferred<List<SightEntity>>
+    fun getSight(@Query("latitude") latitude: Double?,
+                 @Query("longitude") longitude: Double?):Deferred<List<SightEntity>>
+
 
 
 
