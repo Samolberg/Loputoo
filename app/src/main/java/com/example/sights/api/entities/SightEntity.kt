@@ -35,6 +35,10 @@ class SightEntity {
     @SerializedName("Longitude")
     var longitude: Double? = null
 
+    @Expose
+    @SerializedName("Distance")
+    var distance: Double? = null
+
 
 
 

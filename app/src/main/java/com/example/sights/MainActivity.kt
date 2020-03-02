@@ -24,11 +24,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
+import com.google.gson.Gson
 
 
 class MainActivity : AppCompatActivity() {
-
 
 
     var api = getRetrofit().create(SightApi::class.java)
@@ -37,26 +36,35 @@ class MainActivity : AppCompatActivity() {
     var sightIdValue: Int = 0
     var sights: List<SightEntity> = emptyList()
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+            != PackageManager.PERMISSION_GRANTED
+        ) {
 
             // Permission is not granted
             // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            ) {
                 // Show an explanation to the user *asynchronously* -- don't block
                 // this thread waiting for the user's response! After the user
                 // sees the explanation, try again to request the permission.
             } else {
                 // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(this,
+                ActivityCompat.requestPermissions(
+                    this,
                     arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
-                    1)
+                    1
+                )
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
                 // app-defined int constant. The callback method gets the
@@ -67,19 +75,16 @@ class MainActivity : AppCompatActivity() {
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
+        Log.d("Tartu", "Location algab")
         fusedLocationClient.lastLocation
-            .addOnSuccessListener { location : Location? ->
+            .addOnSuccessListener { location: Location? ->
                 // Got last known location. In some rare situations this can be null.
 
+                loadSights(location?.latitude, location?.longitude)
                 Log.d("locationtest", location?.latitude.toString())
                 Log.d("locationtest", location?.longitude.toString())
-
+                Log.d("Tartu", "Location lõpetas")
             }
-
-
-
-
 
 
         nextSight.setOnClickListener {
@@ -91,10 +96,16 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        Log.d("Tartu", "OnCreate lõpetas")
+    }
 
+    fun loadSights(latitude: Double?, longitude: Double?) {
 
         CoroutineScope(Dispatchers.IO).launch {
-            sights = api.getSight().await()
+
+            Log.d("Tartu", "Alustan netist laadimist")
+            sights = api.getSight(latitude, longitude).await()
+            Log.d("currentloc", Gson().toJson(sights))
 
             /*      try {
                       val sights = api.getSight().await()
@@ -106,8 +117,10 @@ class MainActivity : AppCompatActivity() {
                   }
       */
 
-            CoroutineScope(Dispatchers.Main).launch {
 
+            Log.d("Tartu", "Lõpetan netist laadimist")
+            CoroutineScope(Dispatchers.Main).launch {
+                Log.d("Tartu", "Rakendus algab")
                 loadSight(sightIdValue)
             }
         }
@@ -117,22 +130,28 @@ class MainActivity : AppCompatActivity() {
 
         val currentSight: SightEntity = sights.get(index)
 
+        //Sight Picture
         Picasso.get().load(currentSight.url).into(landingImage)
-        sightDescription.setText(sights.get(sightIdValue).description)
+        //Sight Description
+        sightDescription.setText(currentSight.description)
+        //Sight Distance
+        sightDistance.setText(currentSight.distance.toString())
 
+
+        //Google Maps Button
         sightMaps.setOnClickListener {
 
-            startMaps(currentSight.latitude,currentSight.longitude)
+            startMaps(currentSight.latitude, currentSight.longitude)
         }
 
     }
 
-    fun startMaps(latitude: Double?, longitude: Double?){
+    fun startMaps(latitude: Double?, longitude: Double?) {
 
-       // val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
+        // val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
 
-      //  val gmmIntentUri = Uri.parse("geo:"+latitude+","+longitude)
-        val gmmIntentUri = Uri.parse("google.navigation:q="+latitude+","+longitude+"&mode=w")
+        val gmmIntentUri =
+            Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w")
         Log.d("coordinatesTest", gmmIntentUri.toString())
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         mapIntent.setPackage("com.google.android.apps.maps")
@@ -140,6 +159,5 @@ class MainActivity : AppCompatActivity() {
             startActivity(mapIntent)
         }
     }
-
 
 }
