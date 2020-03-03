@@ -25,8 +25,10 @@ class SettingsActivity : AppCompatActivity() {
 
         if (view is CheckBox) {
             val checked: Boolean = view.isChecked
-
-            when (view.id) {
+            editor.putBoolean(view.id.toString(), checked).apply()
+            Log.d("booleantest", pref.getBoolean("historicalSettings", false).toString())
+            Log.d("booleantest", pref.getBoolean("modernSettings", false).toString())
+          /*  when (view.id) {
                 R.id.historicalCheckbox -> {
                     if (checked) {
                         // add preference
@@ -44,6 +46,8 @@ class SettingsActivity : AppCompatActivity() {
                     }
                 }
             }
+
+           */
         }
     }
 
