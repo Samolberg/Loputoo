@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        Log.d("Tartu", "Location algab")
+
         fusedLocationClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 // Got last known location. In some rare situations this can be null.
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
                 loadSights(location?.latitude, location?.longitude)
                 Log.d("locationtest", location?.latitude.toString())
                 Log.d("locationtest", location?.longitude.toString())
-                Log.d("Tartu", "Location lõpetas")
+
             }
 
 
@@ -96,14 +96,19 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        Log.d("Tartu", "OnCreate lõpetas")
+        sightSettings.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+
+
     }
 
     fun loadSights(latitude: Double?, longitude: Double?) {
 
         CoroutineScope(Dispatchers.IO).launch {
 
-            Log.d("Tartu", "Alustan netist laadimist")
+
             sights = api.getSight(latitude, longitude).await()
             Log.d("currentloc", Gson().toJson(sights))
 
@@ -118,9 +123,9 @@ class MainActivity : AppCompatActivity() {
       */
 
 
-            Log.d("Tartu", "Lõpetan netist laadimist")
+
             CoroutineScope(Dispatchers.Main).launch {
-                Log.d("Tartu", "Rakendus algab")
+
                 loadSight(sightIdValue)
             }
         }

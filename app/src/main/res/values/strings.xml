@@ -2,4 +2,9 @@
     <string name="app_name">Sights</string>
     <string name="nextSightText">Show next sight</string>
     <string name="sightMaps">Lets go there</string>
+    <string name="sightSettings">Settings</string>
+    <string name="settingsModernCheckbox">Show Modern Sights</string>
+    <string name="settingsHistoricalCheckbox">Show Historical Sights</string>
+    <string name="settingsCategoryText">Select which type of sights you would like to see</string>
+
 </resources>
