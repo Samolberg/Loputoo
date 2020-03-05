@@ -34,8 +34,14 @@ class SettingsActivity : AppCompatActivity() {
                     if (checked) {
                         // add preference
                         settings.add("Historical")
+
+                        editor.putBoolean("historicalSetting", true)
+                        editor.apply()
                     }else {
                         settings.remove("Historical")
+
+                        editor.remove("historicalSettings")
+                        editor.apply()
                     }
                 }
                 R.id.modernCheckbox -> {
@@ -43,8 +49,14 @@ class SettingsActivity : AppCompatActivity() {
                         //add preference
                         settings.add("Modern")
 
+                        editor.putBoolean("modernSetting", true)
+                        editor.apply()
+
                     }else {
                         settings.remove("Modern")
+
+                        editor.remove("modernSettings")
+                        editor.apply()
                     }
                 }
             }

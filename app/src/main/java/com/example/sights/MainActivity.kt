@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
+import java.lang.reflect.Type
 
 
 class MainActivity : AppCompatActivity() {
@@ -112,6 +113,12 @@ class MainActivity : AppCompatActivity() {
 
 
             sights = api.getSight(latitude, longitude).await()
+
+            val pref = getSharedPreferences("sights.app.settings", Context.MODE_PRIVATE)
+           val settings: List<String> = Gson().fromJson(pref.getString("settings", "[]"), Array<String>::class.java).toList()
+            Log.d("arraytest", settings.toString())
+
+          //  sortedSightsList = sights.filter { it.catList.contains(settings.toString()) }
             sortedSightsList = sights.filter { it.catList.contains("Modern") }
 
             Log.d("filter", Gson().toJson(sortedSightsList))
@@ -142,8 +149,8 @@ class MainActivity : AppCompatActivity() {
     fun loadSight(index: Int) {
 
         val currentSight: SightEntity = sortedSightsList.get(index)
-        val pref = getSharedPreferences("sights.app.settings", Context.MODE_PRIVATE)
-        val editor = pref.edit()
+
+      //  val editor = pref.edit()
 
         //   pref.getBoolean("historicalSettings", false)
         //  pref.getBoolean("modernSettings", false)
