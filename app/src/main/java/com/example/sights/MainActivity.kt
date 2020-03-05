@@ -1,6 +1,7 @@
 package com.example.sights
 
 import android.Manifest
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +36,7 @@ class MainActivity : AppCompatActivity() {
 
     var sightIdValue: Int = 0
     var sights: List<SightEntity> = emptyList()
+    var sortedSightsList: List<SightEntity> = emptyList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -89,7 +91,7 @@ class MainActivity : AppCompatActivity() {
 
         nextSight.setOnClickListener {
             sightIdValue++
-            if (sightIdValue >= sights.size) {
+            if (sightIdValue >= sortedSightsList.size) {
                 sightIdValue = 0
             }
             loadSight(sightIdValue)
@@ -110,6 +112,12 @@ class MainActivity : AppCompatActivity() {
 
 
             sights = api.getSight(latitude, longitude).await()
+            sortedSightsList = sights.filter { it.catList.contains("Modern") }
+
+            Log.d("filter", Gson().toJson(sortedSightsList))
+
+
+
             Log.d("currentloc", Gson().toJson(sights))
 
             /*      try {
@@ -133,7 +141,13 @@ class MainActivity : AppCompatActivity() {
 
     fun loadSight(index: Int) {
 
-        val currentSight: SightEntity = sights.get(index)
+        val currentSight: SightEntity = sortedSightsList.get(index)
+        val pref = getSharedPreferences("sights.app.settings", Context.MODE_PRIVATE)
+        val editor = pref.edit()
+
+        //   pref.getBoolean("historicalSettings", false)
+        //  pref.getBoolean("modernSettings", false)
+
 
         //Sight Picture
         Picasso.get().load(currentSight.url).into(landingImage)
@@ -148,6 +162,7 @@ class MainActivity : AppCompatActivity() {
 
             startMaps(currentSight.latitude, currentSight.longitude)
         }
+
 
     }
 

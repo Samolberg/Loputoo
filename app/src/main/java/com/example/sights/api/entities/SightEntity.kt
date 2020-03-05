@@ -3,6 +3,7 @@ package com.example.sights.api.entities
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.Query
+import java.lang.reflect.Array
 
 
 class SightEntity {
@@ -38,6 +39,11 @@ class SightEntity {
     @Expose
     @SerializedName("Distance")
     var distance: Double? = null
+
+    @Expose
+    @SerializedName("Categories")
+    var catList: List<String> = emptyList()
+
 
 
 
