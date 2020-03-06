@@ -2,31 +2,27 @@ package com.example.sights
 
 import android.Manifest
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.example.sights.api.endpoints.SightApi
 import com.example.sights.api.entities.SightEntity
 import com.example.sights.api.getRetrofit
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.lang.Exception
-import android.content.Intent
-import android.content.pm.PackageManager
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
-import android.location.Location
-import android.net.Uri
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
-import com.google.gson.Gson
-import java.lang.reflect.Type
 
 
 class MainActivity : AppCompatActivity() {
@@ -115,10 +111,15 @@ class MainActivity : AppCompatActivity() {
             sights = api.getSight(latitude, longitude).await()
 
             val pref = getSharedPreferences("sights.app.settings", Context.MODE_PRIVATE)
-           val settings: List<String> = Gson().fromJson(pref.getString("settings", "[]"), Array<String>::class.java).toList()
-            Log.d("arraytest", settings.toString())
 
-          //  sortedSightsList = sights.filter { it.catList.contains(settings.toString()) }
+            val type = object :
+                TypeToken<List<String>>() {}.type
+            val settings: List<String> =
+                Gson().fromJson(pref.getString("settings", "[]"), type)
+
+            // Log.d("arraytest", settings.toString())
+
+            //  sortedSightsList = sights.filter { it.catList.contains(settings.toString()) }
             sortedSightsList = sights.filter { it.catList.contains("Modern") }
 
             Log.d("filter", Gson().toJson(sortedSightsList))
@@ -150,7 +151,7 @@ class MainActivity : AppCompatActivity() {
 
         val currentSight: SightEntity = sortedSightsList.get(index)
 
-      //  val editor = pref.edit()
+        //  val editor = pref.edit()
 
         //   pref.getBoolean("historicalSettings", false)
         //  pref.getBoolean("modernSettings", false)
