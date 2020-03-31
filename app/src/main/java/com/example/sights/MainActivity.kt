@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import com.example.sights.api.endpoints.SightApi
 import com.example.sights.api.entities.SightEntity
 import com.example.sights.api.getRetrofit
+import com.google.android.gms.common.util.ArrayUtils.contains
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.gson.Gson
@@ -110,14 +111,23 @@ class MainActivity : AppCompatActivity() {
 
             sights = api.getSight(latitude, longitude).await()
 
-            val pref = getSharedPreferences("sights.app.settings", Context.MODE_PRIVATE)
+     /*       val pref = getSharedPreferences("sights.app.settings", Context.MODE_PRIVATE)
 
             val type = object :
                 TypeToken<List<String>>() {}.type
             val settings: List<String> =
                 Gson().fromJson(pref.getString("settings", "[]"), type)
+            val sortedList: List<String> = emptyList()
+            var i = 0;
 
-            // Log.d("arraytest", settings.toString())
+      */
+        //    for (i = 0; i < settings.size; i++)
+
+
+
+
+
+
 
             //  sortedSightsList = sights.filter { it.catList.contains(settings.toString()) }
             sortedSightsList = sights.filter { it.catList.contains("Modern") }
@@ -127,16 +137,6 @@ class MainActivity : AppCompatActivity() {
 
 
             Log.d("currentloc", Gson().toJson(sights))
-
-            /*      try {
-                      val sights = api.getSight().await()
-                      Log.d("sights", sights.size.toString())
-                      Log.d("sights", sights.get(0).url)
-                  } catch (e: Exception) {
-                      Log.e("testerror", "asdasd", e)
-
-                  }
-      */
 
 
 
@@ -150,11 +150,6 @@ class MainActivity : AppCompatActivity() {
     fun loadSight(index: Int) {
 
         val currentSight: SightEntity = sortedSightsList.get(index)
-
-        //  val editor = pref.edit()
-
-        //   pref.getBoolean("historicalSettings", false)
-        //  pref.getBoolean("modernSettings", false)
 
 
         //Sight Picture
@@ -176,11 +171,10 @@ class MainActivity : AppCompatActivity() {
 
     fun startMaps(latitude: Double?, longitude: Double?) {
 
-        // val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
 
         val gmmIntentUri =
             Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w")
-        Log.d("coordinatesTest", gmmIntentUri.toString())
+
         val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
         mapIntent.setPackage("com.google.android.apps.maps")
         if (mapIntent.resolveActivity(packageManager) != null) {
